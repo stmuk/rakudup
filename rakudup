@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+RAKUDO_ROOT="${HOME}/.rakudup"
+
+set -e
+
+if [ ! -z "$DEBUG" ]
+then
+    set -x 
+fi
+
+if [ ! -d ${RAKUDO_ROOT} ]; then
+    mkdir ${RAKUDO_ROOT}
+fi
+
+if [[ ! $(git --version) =~ ^git ]]; then
+    echo "Install git"
+    exit 1
+fi
+
+if [[ ! $(perl -v) =~ "Perl 5" ]]; then
+    echo "Install Perl 5"
+    exit 1
+fi
+
+TMP=${RAKUDO_ROOT}/tmp
+
+RELEASE=$(git clone -q --no-checkout --depth 1 git@github.com:rakudo/rakudo.git ${TMP} > /dev/null 2>&1 && cd $dir && git -C ${TMP} show master:VERSION && rm -rf ${TMP})
+
+RAKUDO_SRC="${RAKUDO_ROOT}/${RELEASE}/src"
+RAKUDO_INSTALL="${RAKUDO_ROOT}/${RELEASE}/install"
+
+if [[ -d ${RAKUDO_INSTALL} ]]; then
+    echo "${RELEASE} already installed not updated"
+fi
+
+echo "Getting ${RELEASE}"
+
+git clone -q -c advice.detachedHead=false --depth=1 -b ${RELEASE} https://github.com/rakudo/rakudo.git ${RAKUDO_SRC} 
+
+cd ${RAKUDO_SRC}
+echo "Building ${RELEASE}. Please wait some time."
+echo "'tail -f ${RAKUDO_SRC}/build.log' for progress"
+echo "or maybe now would be a good time to take a look at http://doc.perl6.org or http://perl6intro.com/"
+
+perl Configure.pl --gen-moar --prefix=${RAKUDO_INSTALL} --make-install > ${RAKUDO_SRC}/build.log 2>&1
+
+if [[ $? == 1 ]]; then
+    exit $?
+fi
+
+echo "Built ${RELEASE} OK in ${SECONDS} sec(s)"
+
+ln -s ${RAKUDO_INSTALL} "${RAKUDO_ROOT}/install"
+
+ADDPATH="export PATH=${RAKUDO_ROOT}/install/bin:\$PATH"
+
+echo ${ADDPATH} >> $HOME/.profile
+echo "${ADDPATH} added to end of .profile for next login"
+echo "or use this command to take affect now"
+
+exit 0
