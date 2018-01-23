@@ -41,7 +41,7 @@ echo "Getting Rakudo ${RELEASE}"
 git clone -q -c advice.detachedHead=false --depth=1 -b ${RELEASE} https://github.com/rakudo/rakudo.git ${RAKUDO_SRC} 
 
 cd ${RAKUDO_SRC}
-echo "Building Rakudo ${RELEASE}. This will take several minutes on a modern processor"
+echo "Building Rakudo ${RELEASE}. This will take several minutes on a modern CPU."
 echo "'tail -f ${RAKUDO_SRC}/build.log' for progress"
 
 CFLAGS="-pipe" perl Configure.pl --gen-moar --prefix=${RAKUDO_INSTALL} --make-install > ${RAKUDO_SRC}/build.log 2>&1
@@ -69,9 +69,8 @@ ADDPATH="export PATH=${RAKUDO_ROOT}/install/bin:${RAKUDO_ROOT}/site/bin:\$PATH"
 if [[ -z $(grep .rakudup "${HOME}/.profile") ]]; then
     echo ${ADDPATH} >> $HOME/.profile
     echo "'${ADDPATH}' added to end of .profile for next login"
-    echo "use this command to take affect now"
-    echo "\nsuggested: http://perl6intro.com/ or https://docs.perl6.org/"
+    echo "or use this command to take affect now"
 fi
 
-echo "Rakudo ${RELEASE} installation FINISHED OK"
+echo "Installation finished OK"
 exit 0
