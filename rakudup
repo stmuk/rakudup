@@ -31,27 +31,37 @@ RAKUDO_SRC="${RAKUDO_ROOT}/${RELEASE}/src"
 RAKUDO_INSTALL="${RAKUDO_ROOT}/${RELEASE}/install"
 
 if [[ -d ${RAKUDO_INSTALL} ]]; then
-    echo "${RELEASE} already installed not updated"
+    echo "${RELEASE} already installed not updating"
+    exit 1
 fi
 
-echo "Getting ${RELEASE}"
+echo "Getting Rakudo ${RELEASE}"
 
 git clone -q -c advice.detachedHead=false --depth=1 -b ${RELEASE} https://github.com/rakudo/rakudo.git ${RAKUDO_SRC} 
 
 cd ${RAKUDO_SRC}
-echo "Building ${RELEASE}. Please wait some time."
+echo "Building Rakudo ${RELEASE}. Please wait some time."
 echo "'tail -f ${RAKUDO_SRC}/build.log' for progress"
-echo "or maybe now would be a good time to take a look at http://doc.perl6.org or http://perl6intro.com/"
 
-perl Configure.pl --gen-moar --prefix=${RAKUDO_INSTALL} --make-install > ${RAKUDO_SRC}/build.log 2>&1
+CFLAGS="-pipe" perl Configure.pl --gen-moar --prefix=${RAKUDO_INSTALL} --make-install > ${RAKUDO_SRC}/build.log 2>&1
 
 if [[ $? == 1 ]]; then
     exit $?
 fi
 
-echo "Built ${RELEASE} OK in ${SECONDS} sec(s)"
+echo "Built Rakudo ${RELEASE} OK in ${SECONDS} sec(s)"
 
 ln -s ${RAKUDO_INSTALL} "${RAKUDO_ROOT}/install"
+
+echo "Installing zef (module installer)"
+git clone -q --depth=1 https://github.com/ugexe/zef.git ${RAKUDO_SRC}/zef
+cd ${RAKUDO_SRC}/zef && ${RAKUDO_INSTALL}/bin/perl6 -Ilib bin/zef install .
+
+# https://github.com/ugexe/zef/issues/226 ?
+#cd ${RAKUDO_SRC}/zef && ${RAKUDO_ROOT}/install/bin/perl6 -Ilib bin/zef  -to=inst#${RAKUDO_INSTALL} install .
+
+# we just want p6doc and not to install all the website deps 
+${RAKUDO_INSTALL}/share/perl6/site/bin/zef install --/test -to=inst#${RAKUDO_INSTALL} https://github.com/stmuk/doc.git
 
 ADDPATH="export PATH=${RAKUDO_ROOT}/install/bin:\$PATH"
 
@@ -59,4 +69,5 @@ echo ${ADDPATH} >> $HOME/.profile
 echo "${ADDPATH} added to end of .profile for next login"
 echo "or use this command to take affect now"
 
+echo "FINISHED"
 exit 0
