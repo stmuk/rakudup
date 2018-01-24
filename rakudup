@@ -22,6 +22,7 @@ fi
 if [[ ! $(perl -v) =~ "Perl 5" ]]; then
     echo "Install Perl 5"
     echo "For a local install to your home: curl -L https://install.perlbrew.pl | bash"
+    echo "'perlbrew install perl-5.26.1 --notest -Duseshrplib -Dusemultiplicity' to create a version of Perl 5 suitable for use with Perl6's Inline-Perl5"
     exit 1
 fi
 
