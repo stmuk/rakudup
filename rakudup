@@ -67,7 +67,7 @@ ln -sf "${RAKUDO_INSTALL}/share/perl6/site/bin" "${RAKUDO_ROOT}/site/bin"
 ADDPATH="export PATH=${RAKUDO_ROOT}/install/bin:${RAKUDO_ROOT}/site/bin:\$PATH"
 
 if [[ -z $(grep .rakudup ${HOME}/.profile) ]]; then
-    echo "${ADDPATH}" >> $HOME/.profile
+    echo "${ADDPATH}" >> "$HOME/.profile"
     echo "'${ADDPATH}' added to end of .profile for next login"
     echo "or use this command to take effect now"
 fi
