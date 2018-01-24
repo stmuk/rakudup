@@ -21,6 +21,7 @@ fi
 
 if [[ ! $(perl -v) =~ "Perl 5" ]]; then
     echo "Install Perl 5"
+    echo "For a local install to your home: curl -L https://install.perlbrew.pl | bash"
     exit 1
 fi
 
