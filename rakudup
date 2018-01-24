@@ -69,7 +69,7 @@ ADDPATH="export PATH=${RAKUDO_ROOT}/install/bin:${RAKUDO_ROOT}/site/bin:\$PATH"
 if [[ -z $(grep .rakudup "${HOME}/.profile") ]]; then
     echo ${ADDPATH} >> $HOME/.profile
     echo "'${ADDPATH}' added to end of .profile for next login"
-    echo "or use this command to take affect now"
+    echo "or use this command to take effect now"
 fi
 
 echo "Installation finished OK"
