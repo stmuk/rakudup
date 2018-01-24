@@ -26,7 +26,7 @@ fi
 
 TMP=${RAKUDO_ROOT}/tmp
 
-RELEASE=$(git clone -q --no-checkout --depth 1 git@github.com:rakudo/rakudo.git ${TMP} > /dev/null 2>&1 && cd $dir && git -C ${TMP} show master:VERSION && rm -rf ${TMP})
+RELEASE=$(git clone -q --no-checkout --depth 1 https://github.com/rakudo/rakudo.git ${TMP} > /dev/null 2>&1 && cd $dir && git -C ${TMP} show master:VERSION && rm -rf ${TMP})
 
 RAKUDO_SRC="${RAKUDO_ROOT}/${RELEASE}/src"
 RAKUDO_INSTALL="${RAKUDO_ROOT}/${RELEASE}/install"
