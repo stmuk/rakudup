@@ -43,7 +43,7 @@ echo "Getting Rakudo ${RELEASE}"
 git clone -q -c advice.detachedHead=false --depth=1 -b ${RELEASE} https://github.com/rakudo/rakudo.git "${RAKUDO_SRC}"
 
 cd ${RAKUDO_SRC} || exit 1
-echo "Building Rakudo ${RELEASE}. This will take several minutes on a modern CPU."
+echo "Building Rakudo ${RELEASE}. This will take several minutes on a modern CPU and requires ~2Gb of RAM."
 echo "'tail -f ${RAKUDO_SRC}/build.log' for progress"
 
 CFLAGS="-pipe" perl Configure.pl --gen-moar --prefix="${RAKUDO_INSTALL}" --make-install > "${RAKUDO_SRC}/build.log" 2>&1
